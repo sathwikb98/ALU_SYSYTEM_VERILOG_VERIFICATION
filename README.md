@@ -14,5 +14,4 @@ This project describes the complete testing and verification process for a param
 - Contains funtional coverage plan for the project.
 
 ##  TESTBENCH ARCHITECTURE
-<img width="1460" height="1121" alt="ALU_TB" src="https://github.com/user-attachments/assets/f061d8fa-7a44-4532-9781-128744ae4658" />
-
+<img width="1500" height="1160" alt="ALU_TB" src="https://github.com/user-attachments/assets/2ea234e7-f8aa-4b6b-8415-d62751b92256" />
