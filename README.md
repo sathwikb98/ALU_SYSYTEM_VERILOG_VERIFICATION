@@ -13,5 +13,6 @@ This project describes the complete testing and verification process for a param
 ## COVERAGE PLAN
 - Contains funtional coverage plan for the project.
 
-##  TESTBENCH ARCHITECTURE.
-[https://lucid.app/lucidspark/ebb12b66-0222-4700-b927-04d5b56d0665/edit?viewport_loc=-535%2C-388%2C2890%2C1562%2C0_0&invitationId=inv_ed693c78-b8f3-4a81-88a5-effcb24557b5]
+##  TESTBENCH ARCHITECTURE
+.<img width="1460" height="1121" alt="ALU_TB" src="https://github.com/user-attachments/assets/f061d8fa-7a44-4532-9781-128744ae4658" />
+
