@@ -26,8 +26,8 @@ class alu_test;
 endclass : alu_test
 
 
-class alu_test_single_a extends alu_test;
-  alu_single_op_a trans_add;
+class alu_test_arithmetic extends alu_test;
+  alu_arithmetic trans_arth;
   function new( virtual alu_inf drv_vif,
                 virtual alu_inf mon_vif,
                 virtual alu_inf ref_vif);
@@ -38,17 +38,17 @@ class alu_test_single_a extends alu_test;
     env = new(drv_vif, mon_vif, ref_vif);
     env.build;
     begin
-      trans_add = new();
-      env.gen.blueprint = trans_add;
+      trans_arth = new();
+      env.gen.blueprint = trans_arth;
     end
     env.start();
   endtask
 
-endclass : alu_test_single_a
+endclass : alu_test_arithmetic
 
-class alu_test_two_a extends alu_test;
+class alu_test_logical extends alu_test;
 
-  alu_two_op_a trans_2_a;
+  alu_logical trans_log;
   function new( virtual alu_inf drv_vif,
                 virtual alu_inf mon_vif,
                 virtual alu_inf ref_vif);
@@ -59,49 +59,8 @@ class alu_test_two_a extends alu_test;
     env = new(drv_vif, mon_vif, ref_vif);
     env.build;
     begin
-      trans_2_a = new();
-      env.gen.blueprint = trans_2_a;
-    end
-    env.start();
-  endtask
-
-endclass
-
-class alu_test_two_1 extends alu_test;
-
-  alu_two_op_1 trans_2_1;
-  function new( virtual alu_inf drv_vif,
-                virtual alu_inf mon_vif,
-                virtual alu_inf ref_vif);
-    super.new(drv_vif, mon_vif, ref_vif);
-  endfunction
-
-  task run();
-    env = new(drv_vif, mon_vif, ref_vif);
-    env.build;
-    begin
-      trans_2_1 = new();
-      env.gen.blueprint = trans_2_1;
-    end
-    env.start();
-  endtask
-
-endclass
-
-class alu_test_single_1 extends alu_test;
-  alu_single_op_1 trans_1;
-  function new( virtual alu_inf drv_vif,
-                virtual alu_inf mon_vif,
-                virtual alu_inf ref_vif);
-    super.new(drv_vif, mon_vif, ref_vif);
-  endfunction
-
-  task run();
-    env = new(drv_vif, mon_vif, ref_vif);
-    env.build;
-    begin
-      trans_1 = new();
-      env.gen.blueprint = trans_1;
+      trans_log = new();
+      env.gen.blueprint = trans_log;
     end
     env.start();
   endtask
@@ -110,11 +69,8 @@ endclass
 
 class alu_regression_test extends alu_test;
   alu_transaction trans;
-  alu_single_op_1 trans_1;
-  alu_single_op_a trans_a;
-  alu_two_op_1 trans_2_1;
-  alu_two_op_a trans_2_a;
-  alu_error trans_e;
+  alu_arithmetic trans_1;
+  alu_logical trans_2;
 
   function new( virtual alu_inf drv_vif,
                 virtual alu_inf mon_vif,
@@ -126,31 +82,21 @@ class alu_regression_test extends alu_test;
     env = new(drv_vif, mon_vif, ref_vif);
     env.build;
 
-    ///test
+    // test 1 - base test .....
     trans = new();
     env.gen.blueprint = trans;
     env.start();
 
-    trans_a = new();
-    env.gen.blueprint = trans_a;
-    env.start();
-
-    ////test 4
+    // test 2
     trans_1 = new();
     env.gen.blueprint = trans_1;
     env.start();
 
-    trans_2_a = new();
-    env.gen.blueprint = trans_2_a;
+    // test 3
+    trans_2 = new();
+    env.gen.blueprint = trans_2;
     env.start();
 
-    trans_2_1 = new();
-    env.gen.blueprint = trans_2_1;
-    env.start();
-
-    trans_e = new();
-    env.gen.blueprint = trans_e;
-    env.start();
   endtask
 
 endclass
