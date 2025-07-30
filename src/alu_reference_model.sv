@@ -103,19 +103,19 @@ class alu_reference_model;
                `CMP :
                  begin
                    if(ref_trans.OPA > ref_trans.OPB ) begin
-                     ref_trans.E = 1'b0;
+                     ref_trans.E = 1'bz;
                      ref_trans.G = 1'b1;
-                     ref_trans.L = 1'b0;
+                     ref_trans.L = 1'bz;
                    end
                    else if(ref_trans.OPA < ref_trans.OPB) begin
-                     ref_trans.E = 1'b0;
-                     ref_trans.G = 1'b0;
+                     ref_trans.E = 1'bz;
+                     ref_trans.G = 1'bz;
                      ref_trans.L = 1'b1;
                    end
                    else begin // equal
                      ref_trans.E = 1'b1;
-                     ref_trans.G = 1'b0;
-                     ref_trans.L = 1'b0;
+                     ref_trans.G = 1'bz;
+                     ref_trans.L = 1'bz;
                    end
                  end
                `INCR_MULT :
