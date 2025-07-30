@@ -19,11 +19,9 @@ module top;
 
   // Tests for
   alu_test test = new(inf.DRV, inf.MON, inf.REF);
-  alu_test_single_a test1 = new(inf.DRV, inf.MON, inf.REF);
-  alu_test_two_a test2 = new(inf.DRV, inf.MON, inf.REF);
-  alu_test_two_1 test3 = new(inf.DRV, inf.MON, inf.REF);
-  alu_test_single_1 test4 = new(inf.DRV, inf.MON, inf.REF);
-  alu_regression_test tr = new(inf.DRV, inf.MON, inf.REF);
+  alu_test_arithmetic test1 = new(inf.DRV, inf.MON, inf.REF);
+  alu_test_logical test2 = new(inf.DRV, inf.MON, inf.REF);
+  alu_regression_test tst_reg = new(inf.DRV, inf.MON, inf.REF);
 
   always#(delay) CLK = ~CLK;
 
@@ -38,7 +36,7 @@ module top;
 
   initial begin
     //test.run();
-    tr.run();
+    tst_reg.run(); // regression test !
     #50; $finish;
   end
 endmodule : top
