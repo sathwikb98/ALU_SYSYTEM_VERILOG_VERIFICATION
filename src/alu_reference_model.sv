@@ -143,6 +143,7 @@ class alu_reference_model;
                 `NAND :
                   begin
                     ref_trans.RES = ~(ref_trans.OPA & ref_trans.OPB);
+                    ref_trans.RES[`OP_WIDTH] = 1'b0;
                   end
                 `OR :
                   begin
@@ -159,14 +160,17 @@ class alu_reference_model;
                 `XNOR :
                   begin
                     ref_trans.RES = ~(ref_trans.OPA ^ ref_trans.OPB);
+                    ref_trans.RES[`OP_WIDTH] = 1'b0;
                   end
                 `NOT_A :
                   begin
                     ref_trans.RES = ~(ref_trans.OPA);
+                    ref_trans.RES[`OP_WIDTH] = 1'b0;
                   end
                 `NOT_B :
                   begin
                     ref_trans.RES = ~(ref_trans.OPB);
+                    ref_trans.RES[`OP_WIDTH] = 1'b0;
                   end
                 `SHR1_A :
                   begin
@@ -188,20 +192,20 @@ class alu_reference_model;
                   begin
                     rotation = ref_trans.OPB[ROL_WIDTH-1:0];
                     err_flag = ref_trans.OPB[`OP_WIDTH-1 : ROL_WIDTH+1];
-                    ref_trans.ERR = (err_flag)? 1'b1 : 1'b0;
+                    ref_trans.ERR = (err_flag)? 1'b1 : 1'bz;
                     ref_trans.RES = { (ref_trans.OPA << rotation) | (ref_trans.OPA >> `OP_WIDTH-rotation) };
                   end
                 `ROR_A_B :
                   begin
                     rotation = ref_trans.OPB[ROL_WIDTH-1:0];
                     err_flag = ref_trans.OPB[`OP_WIDTH-1 : ROL_WIDTH+1];
-                    ref_trans.ERR = (err_flag)? 1'b1 : 1'b0;
+                    ref_trans.ERR = (err_flag)? 1'b1 : 1'bz;
                     ref_trans.RES = { (ref_trans.OPA >> rotation) | (ref_trans.OPA << `OP_WIDTH-rotation) };
 
                   end
                 default :
                   begin
-                    ref_trans.RES = 0;
+                    ref_trans.RES = {`OP_WIDTH+1{1'bz}};
                     ref_trans.ERR = 1'b1;
                   end
               endcase
