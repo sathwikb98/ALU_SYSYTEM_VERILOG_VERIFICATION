@@ -2,8 +2,6 @@
 `include "alu_inf.sv"
 `include "ALU_DESIGN.sv"
 
-parameter DW = 8, CW = 4;
-
 module top;
   parameter delay = 10; // delay for clock generation
   // clock and reset for ALU
@@ -15,7 +13,7 @@ module top;
   alu_inf inf(.CLK(CLK), .RST(RST), .CE(CE));
 
   // Instantiate the `DUV` and connect it to interface
-  ALU_DESIGN #(DW,CW) DUV (.CLK(inf.CLK), .RST(inf.RST), .INP_VALID(inf.INP_VALID), .MODE(inf.MODE), .CMD(inf.CMD), .CE(inf.CE), .OPA(inf.OPA), .OPB(inf.OPB), .CIN(inf.CIN), .ERR(inf.ERR), .RES(inf.RES), .OFLOW(inf.OFLOW), .COUT(inf.COUT), .G(inf.G), .L(inf.L), .E(inf.E) );
+  ALU_DESIGN #(.DW(`OP_WIDTH), .CW(`CMD_WIDTH)) DUV (.CLK(inf.CLK), .RST(inf.RST), .INP_VALID(inf.INP_VALID), .MODE(inf.MODE), .CMD(inf.CMD), .CE(inf.CE), .OPA(inf.OPA), .OPB(inf.OPB), .CIN(inf.CIN), .ERR(inf.ERR), .RES(inf.RES), .OFLOW(inf.OFLOW), .COUT(inf.COUT), .G(inf.G), .L(inf.L), .E(inf.E) );
 
   // Tests for
   alu_test test = new(inf.DRV, inf.MON, inf.REF);
