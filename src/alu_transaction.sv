@@ -20,7 +20,15 @@ class alu_transaction;
                          else CMD inside { [0:13] };
   }
   // 2. For `CMD weightage
-  constraint CMD_WEIGHTAGE {CMD dist {[0:8]:= 5, [6:13]:=2}; }
+  constraint CMD_WEIGHTAGE {if(MODE == 1) CMD dist { [0:3]:= 5, [8:9] :=5 , [4:7]:=1, 10:=1};
+                            else if(MODE == 0) CMD dist { [0:1]:= 5, [3:5]:=5, [12:13]:=3, 2:=1, [6:11]:=1};
+  }
+  //3. for INP_VALID range
+  constraint INP_VALID_RANGE { INP_VALID dist {2'b01 :=5, 2'b10 := 5, 2'b11 := 10}; }
+  // 4. OPA and OPB range
+  constraint OP_RANGE { OPA inside {[0:30]} && OPB inside {[0:30]}; }
+
+  //METHODS ...
   // ... copying object ....
   virtual function alu_transaction copy();
     copy = new();
@@ -36,14 +44,15 @@ class alu_transaction;
 
 endclass : alu_transaction
 
-class alu_single_op_a extends alu_transaction;
+class alu_arithmetic extends alu_transaction;  // Test case 1 : To check the output when MODE == 1 [Arithmetic] with CMD inside 0 to 10 
 
-  constraint cmd_range {CMD inside {4,5,6,7}; }
-  constraint mode_val {MODE == 1;  }
-  constraint inp_val { INP_VALID == 3; }
+  constraint cmd_range { CMD inside {[0:3], [8:9]}; } //single operand operation
+  constraint mode_val { MODE == 1; }
+  constraint inp_val { INP_VALID dist { 2'b11 :=8, 2'b10 :=8, 2'b01:=20}; }
 
   virtual function alu_transaction copy();
-    alu_single_op_a copy1;
+
+    alu_arithmetic copy1;
     copy1 = new();
     copy1.INP_VALID = this.INP_VALID;
     copy1.MODE = this.MODE;
@@ -57,18 +66,18 @@ class alu_single_op_a extends alu_transaction;
 endclass
 
 
-class alu_two_op_a extends alu_transaction;
+class alu_logical extends alu_transaction; // Test case 2 : To check the output when MODE == 0 [LOGICAL] with CMD inside 0 to 13 
 
-  constraint cmd_range {CMD inside {[0:3], [8:10]};
-                        CMD dist {[0:3]:= 2, 8:= 8, [7:10]:=2};
-                        }
-  constraint mode_val {MODE == 1; }
-  constraint inp_val { INP_VALID == 3; }
+  constraint cmd_range { CMD inside {[0:1], [3:5], [12:13]}; }
+  constraint cmd_val   { if(CMD == 13) OPB < 8; }
+  constraint mode_val { MODE == 0; }
+  constraint inp_val { INP_VALID dist {2'b11 := 8, 2'b10 := 20, 2'b01 := 9}; }
   constraint weight_cin { CIN dist { 1:=2, 0:= 5}; }
-  constraint op_range { (CIN inside {9,10}) -> (OPA < 20 && OPB < 5);  }
+  constraint op_range { (CIN inside {9,10}) -> (OPA < 20 && OPB < 15);  }
 
   virtual function alu_transaction copy();
-    alu_two_op_a copy2;
+
+    alu_logical copy2;
     copy2 = new();
     copy2.INP_VALID = this.INP_VALID;
     copy2.MODE = this.MODE;
@@ -76,70 +85,7 @@ class alu_two_op_a extends alu_transaction;
     copy2.OPA = this.OPA;
     copy2.OPB = this.OPB;
     copy2.CIN = this.CIN;
-
     return copy2;
   endfunction : copy
-endclass
 
-class alu_two_op_1 extends alu_transaction;
-
-  constraint cmd_range {CMD inside {[0:5], 12, 13};
-                        CMD dist {[0:5]:= 2, 12:=4, 13:=4 };
-                        }
-  constraint mode_val {MODE == 0; }
-  constraint inp_val { INP_VALID == 3; }
-
-  virtual function alu_transaction copy();
-    alu_two_op_1 copy3;
-    copy3 = new();
-    copy3.INP_VALID = this.INP_VALID;
-    copy3.MODE = this.MODE;
-    copy3.CMD = this.CMD;
-    copy3.OPA = this.OPA;
-    copy3.OPB = this.OPB;
-    copy3.CIN = this.CIN;
-
-    return copy3;
-  endfunction : copy
-endclass
-
-class alu_single_op_1 extends alu_transaction;
-
-  constraint cmd_range {CMD inside {6,7,8,9,10,11}; }
-  constraint mode_val {MODE == 0; }
-  constraint inp_val { INP_VALID == 3; }
-
-  virtual function alu_transaction copy();
-    alu_single_op_1 copy4;
-    copy4 = new();
-    copy4.INP_VALID = this.INP_VALID;
-    copy4.MODE = this.MODE;
-    copy4.CMD = this.CMD;
-    copy4.OPA = this.OPA;
-    copy4.OPB = this.OPB;
-    copy4.CIN = this.CIN;
-
-    return copy4;
-  endfunction : copy
-endclass
-
-class alu_error extends alu_transaction;
-
-  constraint eq { (MODE == 1 && CMD == 8) -> (OPA == OPB); }
-  constraint inp_val { INP_VALID inside {0,1,2}; }
-  constraint weight_cin { CIN dist { 1:=2, 0:= 5}; }
-  constraint op_range { (OPA == 0 || OPA ==`MAX) && (OPB == 0 || OPB == `MAX); }
-
-  virtual function alu_transaction copy();
-    alu_two_op_a copy5;
-    copy5 = new();
-    copy5.INP_VALID = this.INP_VALID;
-    copy5.MODE = this.MODE;
-    copy5.CMD = this.CMD;
-    copy5.OPA = this.OPA;
-    copy5.OPB = this.OPB;
-    copy5.CIN = this.CIN;
-
-    return copy5;
-  endfunction : copy
 endclass
